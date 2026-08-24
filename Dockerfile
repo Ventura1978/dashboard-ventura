@@ -1,6 +1,6 @@
 FROM rocker/shiny:latest
 
-# Dependencias del sistema
+# Instalación de librerías del sistema Linux (requeridas para leaflet y sf)
 RUN apt-get update && apt-get install -y \
     libssl-dev \
     libcurl4-openssl-dev \
@@ -14,18 +14,13 @@ WORKDIR /code
 
 COPY . /code
 
-# Paquetes requeridos para análisis y dashboards
-RUN R -e "install.packages(c(\
-    'tidyverse', 'readxl', 'writexl', 'haven', 'foreign', \
-    'survey', 'srvyr', 'sf', \
-    'shinydashboard', 'shinyjs', 'bslib', 'fresh', \
-    'plotly', 'DT', 'leaflet', 'leaflet.extras', \
-    'scales', 'janitor', 'lubridate'\
-    ), repos='https://cloud.r-project.org/')"
+# Instalación de paquetes de R en bloques para asegurar su instalación
+RUN R -e "install.packages(c('tidyverse', 'readxl', 'writexl', 'haven', 'foreign', 'janitor', 'lubridate'), repos='https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('shinydashboard', 'shinyjs', 'bslib', 'fresh', 'DT', 'plotly'), repos='https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('survey', 'srvyr', 'sf', 'leaflet', 'leaflet.extras'), repos='https://cloud.r-project.org/')"
 
-# Permite que Shiny escuche en el puerto que Render asigna automáticamente
+# Configuración del puerto dinámico para Render
 CMD ["R", "-e", "port <- as.numeric(Sys.getenv('PORT', 3838)); shiny::runApp('/code', host = '0.0.0.0', port = port)"]
-
 
 
 
