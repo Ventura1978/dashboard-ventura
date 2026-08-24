@@ -4,8 +4,8 @@ WORKDIR /code
 
 COPY . /code
 
-# Instalación de dependencias de la UI de Shiny
-RUN R -e "install.packages(c('shinydashboard', 'shinyjs', 'bslib', 'fresh', 'DT', 'plotly', 'srvyr'), repos='https://cloud.r-project.org/')"
+# Instalación de dependencias de R necesarias para la App
+RUN R -e "install.packages(c('shinydashboard', 'shinyjs', 'bslib', 'fresh', 'DT', 'plotly', 'srvyr', 'survey'), repos='https://cloud.r-project.org/')"
 
 EXPOSE 3838
 
