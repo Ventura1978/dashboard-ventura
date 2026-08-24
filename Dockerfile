@@ -1,13 +1,16 @@
-FROM rocker/shinyverse:latest
+FROM rocker/shiny:latest
 
-RUN apt-get update && apt-get install -y libssl-dev libcurl4-openssl-dev libxml2-dev
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libxml2-dev
 
 WORKDIR /code
 
 COPY . /code
 
-# Si tu dashboard usa otros paquetes de R (como leaflet, bslib, etc.), agrégalos dentro de c(...)
-RUN R -e "install.packages(c('shinydashboard', 'plotly', 'DT', 'readxl'), repos='https://cloud.r-project.org/')"
+# Paquetes requeridos para tu dashboard (puedes agregar más si los necesitas)
+RUN R -e "install.packages(c('shinydashboard', 'plotly', 'DT', 'readxl', 'tidyverse'), repos='https://cloud.r-project.org/')"
 
 EXPOSE 3838
 
